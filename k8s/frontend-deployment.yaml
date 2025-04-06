@@ -18,6 +18,9 @@ spec:
         image: ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/frontend:latest
         ports:
         - containerPort: 80
+        env:
+        - name: REACT_APP_API_URL
+          value: "http://backend.web-app.svc.cluster.local"
         resources:
           requests:
             cpu: "100m"
