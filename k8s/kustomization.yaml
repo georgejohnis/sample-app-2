@@ -8,6 +8,8 @@ resources:
   - frontend-deployment.yaml
   - backend-deployment.yaml
   - ingress.yaml
+  - cluster-addons/aws-load-balancer-controller.yaml
+  - cluster-addons/aws-load-balancer-controller-rbac.yaml
 
 images:
   - name: frontend

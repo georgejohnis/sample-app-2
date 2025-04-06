@@ -46,4 +46,76 @@ metadata:
   name: eks-cluster-policy-attachment
 spec:
   roleName: eks-cluster-role
-  policyArn: arn:aws:iam::${AWS_ACCOUNT_ID}:policy/eks-cluster-policy 
+  policyArn: arn:aws:iam::${AWS_ACCOUNT_ID}:policy/eks-cluster-policy
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  name: ack-elbv2-controller-role
+  namespace: ack-system
+spec:
+  name: ACKELBv2ControllerRole
+  assumeRolePolicyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "eks.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    }
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Policy
+metadata:
+  name: ack-elbv2-controller-policy
+  namespace: ack-system
+spec:
+  name: ACKELBv2ControllerPolicy
+  policyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "elasticloadbalancing:*",
+            "ec2:DescribeAccountAttributes",
+            "ec2:DescribeAddresses",
+            "ec2:DescribeInternetGateways",
+            "ec2:DescribeVpcs",
+            "ec2:DescribeSubnets",
+            "ec2:DescribeSecurityGroups",
+            "ec2:DescribeInstances",
+            "ec2:DescribeNetworkInterfaces",
+            "ec2:DescribeTags",
+            "ec2:GetCoipPoolUsage",
+            "ec2:DescribeCoipPools",
+            "elasticloadbalancing:DescribeLoadBalancers",
+            "elasticloadbalancing:DescribeLoadBalancerAttributes",
+            "elasticloadbalancing:DescribeListeners",
+            "elasticloadbalancing:DescribeListenerCertificates",
+            "elasticloadbalancing:DescribeSSLPolicies",
+            "elasticloadbalancing:DescribeRules",
+            "elasticloadbalancing:DescribeTargetGroups",
+            "elasticloadbalancing:DescribeTargetGroupAttributes",
+            "elasticloadbalancing:DescribeTargetHealth",
+            "elasticloadbalancing:DescribeTags"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: RolePolicyAttachment
+metadata:
+  name: ack-elbv2-controller-policy-attachment
+  namespace: ack-system
+spec:
+  roleName: ACKELBv2ControllerRole
+  policyArn: arn:aws:iam::${AWS_ACCOUNT_ID}:policy/ACKELBv2ControllerPolicy 

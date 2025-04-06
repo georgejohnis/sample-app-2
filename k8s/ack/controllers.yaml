@@ -61,4 +61,19 @@ spec:
         kind: HelmRepository
         name: ack-ec2-repo
         namespace: ack-system
+  interval: 5m
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ack-elbv2-controller
+  namespace: ack-system
+spec:
+  chart:
+    spec:
+      chart: elbv2-chart
+      sourceRef:
+        kind: HelmRepository
+        name: ack-elbv2-repo
+        namespace: ack-system
   interval: 5m 
