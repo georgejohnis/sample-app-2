@@ -1,0 +1,67 @@
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: VPC
+metadata:
+  name: web-app-vpc
+spec:
+  cidrBlock: 10.0.0.0/16
+  enableDnsHostnames: true
+  enableDnsSupport: true
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: Subnet
+metadata:
+  name: web-app-subnet-1
+spec:
+  cidrBlock: 10.0.1.0/24
+  vpcID: ${VPC_ID}
+  availabilityZone: us-west-2a
+  mapPublicIPOnLaunch: true
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: Subnet
+metadata:
+  name: web-app-subnet-2
+spec:
+  cidrBlock: 10.0.2.0/24
+  vpcID: ${VPC_ID}
+  availabilityZone: us-west-2b
+  mapPublicIPOnLaunch: true
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: InternetGateway
+metadata:
+  name: web-app-igw
+spec:
+  vpcID: ${VPC_ID}
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: RouteTable
+metadata:
+  name: web-app-rt
+spec:
+  vpcID: ${VPC_ID}
+  routes:
+    - destinationCidrBlock: 0.0.0.0/0
+      gatewayID: ${IGW_ID}
+---
+apiVersion: ec2.services.k8s.aws/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: web-app-sg
+spec:
+  groupName: web-app-sg
+  description: Security group for web application
+  vpcID: ${VPC_ID}
+  ingress:
+    - ipProtocol: tcp
+      fromPort: 80
+      toPort: 80
+      cidrIP: 0.0.0.0/0
+    - ipProtocol: tcp
+      fromPort: 443
+      toPort: 443
+      cidrIP: 0.0.0.0/0
+    - ipProtocol: tcp
+      fromPort: 22
+      toPort: 22
+      cidrIP: 0.0.0.0/0 

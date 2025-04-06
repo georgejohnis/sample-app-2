@@ -1,0 +1,17 @@
+apiVersion: ecr.services.k8s.aws/v1alpha1
+kind: Repository
+metadata:
+  name: frontend-repo
+spec:
+  name: frontend
+  imageScanningConfiguration:
+    scanOnPush: true
+---
+apiVersion: ecr.services.k8s.aws/v1alpha1
+kind: Repository
+metadata:
+  name: backend-repo
+spec:
+  name: backend
+  imageScanningConfiguration:
+    scanOnPush: true 

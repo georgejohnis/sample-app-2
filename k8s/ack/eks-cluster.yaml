@@ -1,0 +1,16 @@
+apiVersion: eks.services.k8s.aws/v1alpha1
+kind: Cluster
+metadata:
+  name: web-app-cluster
+spec:
+  name: web-app-cluster
+  roleARN: arn:aws:iam::${AWS_ACCOUNT_ID}:role/eks-cluster-role
+  version: "1.28"
+  resourcesVPCConfig:
+    subnetIDs:
+      - ${SUBNET_ID_1}
+      - ${SUBNET_ID_2}
+    securityGroupIDs:
+      - ${SECURITY_GROUP_ID}
+  kubernetesNetworkConfig:
+    serviceIPv4CIDR: 172.20.0.0/16 

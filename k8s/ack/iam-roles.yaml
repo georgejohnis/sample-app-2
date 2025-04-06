@@ -1,0 +1,49 @@
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  name: eks-cluster-role
+spec:
+  name: eks-cluster-role
+  assumeRolePolicyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "eks.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+      ]
+    }
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Policy
+metadata:
+  name: eks-cluster-policy
+spec:
+  name: eks-cluster-policy
+  policyDocument: |
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "eks:*",
+            "ec2:*",
+            "iam:*"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: RolePolicyAttachment
+metadata:
+  name: eks-cluster-policy-attachment
+spec:
+  roleName: eks-cluster-role
+  policyArn: arn:aws:iam::${AWS_ACCOUNT_ID}:policy/eks-cluster-policy 
