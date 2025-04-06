@@ -22,4 +22,23 @@ spec:
     - group: apps
       kind: Deployment
       jsonPointers:
-        - /spec/template/spec/containers/0/image 
+        - /spec/template/spec/containers/0/image
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-addons
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/georgejohnis/sample-app-2.git
+    targetRevision: HEAD
+    path: k8s/cluster-addons
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true 
